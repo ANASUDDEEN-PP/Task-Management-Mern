@@ -12,16 +12,10 @@ const connection = require('./DB');
 connection();
 
 //import Routes
-// const userRoute = require('./routes/user');
-// const demoRoute = require('./routes/demo');
-// const branchRoute = require('./routes/branchRoute');
-// const agentRoute = require('./routes/agentRoute');
+const taskRouter = require('./routes/taskRoute');
 
 //Use Route
-// app.use('/api', userRoute);
-// app.use('/demo', demoRoute);
-// app.use('/api/branch', branchRoute);
-// app.use('/api/agent', agentRoute);
+app.use('/task', taskRouter);
 
 // 404 Route (Catch-All)
 app.use((req, res, next) => {

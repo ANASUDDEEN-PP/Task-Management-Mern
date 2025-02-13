@@ -1,20 +1,32 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-module.exports = () =>{
-    try{
-        //mongoDB Connection
-        mongoose.connect(
-            //connection string change according to your string
-            'mongodb://localhost:27017/Task_Management'
-            // MONGOOSE_CONNECTION
-        );
-        mongoose.connection.on('connected', () => {
-        console.log('Connected to MongoDB');
-        });
-        mongoose.connection.on('error', (err) => {
-        console.error(`MongoDB connection error: ${err}`);
-        });
-    } catch(err){
-        console.log(err);
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect('mongodb://localhost:27017/TaskManagement');
+
+        console.log('Connected to MongoDB - Database: TaskManagement');
+
+        await initializeDB();
+
+    } catch (err) {
+        console.error(`MongoDB connection error: ${err.message}`);
+        process.exit(1); // Exit process with failure
     }
-}
+};
+
+const initializeDB = async () => {
+    try {
+        const Task = mongoose.model('tasks', new mongoose.Schema({ name: String }));
+        const taskCount = await Task.countDocuments();
+
+        if (taskCount === 0) {
+            await Task.create({ name: 'Initialize Database' });
+            console.log('TaskManagement database initialized successfully!');
+        }
+    } catch (err) {
+        console.error(`Error initializing database: ${err.message}`);
+    }
+};
+
+module.exports = connectDB;

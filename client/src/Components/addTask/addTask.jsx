@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+import baseUrl from "../../url";
 import "./addtask.css";
 
 const AddTaskPopup = ({ onClose, onSubmit }) => {
@@ -23,10 +25,23 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
     }, 500);
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     onSubmit({ taskName, assignee, status, date });
-    console.log({ taskName, assignee, status, date });
+    const taskData = {
+        TaskName: taskName,
+        AssigneeName: assignee,
+        Status: status,
+        SubmitDate: date
+    };
+    try{
+        const responce = await axios.post(`http://localhost:8080/task/create`, taskData)
+        .then(res=>{
+            console.log(responce);
+        });
+    } catch(err){
+        console.log(err)
+    }
   };
 
   return (
