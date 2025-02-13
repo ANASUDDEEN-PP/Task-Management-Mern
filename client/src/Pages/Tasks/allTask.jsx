@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "../../Components/navbar/navBar";
 import Sidebar from "../../Components/sidebar/sideBar";
 import AddTaskPopup from "../../Components/addTask/addTask"; // Import the popup
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import SearchBar from '../../Components/searchDrop/searchDrop';
 import "./alltask.css";
 
@@ -12,7 +12,6 @@ const TaskView = () => {
     { id: 2, taskName: "Develop API", assignee: "Bob", status: "In Progress" },
     { id: 3, taskName: "Test Features", assignee: "Charlie", status: "Completed" },
   ]);
-  const navigate = useNavigate();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
