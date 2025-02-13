@@ -1,0 +1,46 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #333;
+    color: white;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+  }
+  
+  .search-bar input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    width: 250px;
+  }
+  
+  .notification-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .notification-icon:hover {
+    transform: scale(1.2);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .search-bar {
+      margin: 10px 0;
+    }
+    
+    .search-bar input {
+      width: 100%;
+    }
+  }
+  
