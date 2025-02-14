@@ -1,23 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../Components/navbar/navBar";
 import Sidebar from "../../Components/sidebar/sideBar";
 import AddTaskPopup from "../../Components/addTask/addTask"; // Import the popup
 import { Link } from "react-router-dom";
 import SearchBar from '../../Components/searchDrop/searchDrop';
+import axios from "axios";
 import "./alltask.css";
 
 const TaskView = () => {
-  const [tasks, setTasks] = useState([
-    { id: 1, taskName: "Design Homepage", assignee: "Alice", status: "Pending" },
-    { id: 2, taskName: "Develop API", assignee: "Bob", status: "In Progress" },
-    { id: 3, taskName: "Test Features", assignee: "Charlie", status: "Completed" },
-  ]);
-
+  const [tasks, setTasks] = useState([]); // Initialize with an empty array
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleAddTask = (newTask) => {
-    setTasks([...tasks, { id: tasks.length + 1, ...newTask }]);
-  };
+  useEffect(() => {
+    const fetchContentData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5003/task/view");
+        console.log(response.data.allDatas);
+        setTasks(response.data.allDatas); // Update state with fetched tasks
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchContentData();
+  }, []);
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -58,11 +63,11 @@ const TaskView = () => {
               {tasks.map((task, index) => (
                 <tr key={task.id}>
                   <td>{index + 1}</td>
-                  <td>{task.taskName}</td>
-                  <td>{task.assignee}</td>
-                  <td className={getStatusClass(task.status)}>{task.status}</td>
+                  <td>{task.TaskName}</td>
+                  <td>{task.AssigneeName}</td>
+                  <td className={getStatusClass(task.status)}>{task.Status}</td>
                   <td>
-                    <Link className="view-btn" to={`/tasks/${task.id}/viewTask`}>View</Link>
+                    <Link className="view-btn" to={`/tasks/${task._id}/viewTask`}>View</Link>
                   </td>
                 </tr>
               ))}
@@ -73,7 +78,7 @@ const TaskView = () => {
             <AddTaskPopup
               onClose={() => setIsPopupOpen(false)}
               onSubmit={(newTask) => {
-                handleAddTask(newTask);
+                // handleAddTask(newTask);
                 setIsPopupOpen(false);
               }}
             />

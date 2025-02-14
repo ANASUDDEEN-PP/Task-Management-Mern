@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"; // Assuming you're using React Router
 import Navbar from "../../../Components/navbar/navBar";
 import Sidebar from "../../../Components/sidebar/sideBar";
 import "./viewtask.css";
+import axios from "axios";
 
 const ViewTask = () => {
   const { id } = useParams();
@@ -13,6 +14,17 @@ const ViewTask = () => {
     status: "In Progress",
     date: "2024-02-15",
   });
+
+  useEffect(()=>{
+    const taskDataById = async () => {
+      try{
+        const responce = await axios.get(`http://localhost:5003/get/${id}`);
+      } catch(err){
+        console.log(err);
+      }
+    }
+    taskDataById();
+  },[]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(task);

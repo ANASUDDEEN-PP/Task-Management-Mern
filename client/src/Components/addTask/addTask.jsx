@@ -35,7 +35,7 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
         SubmitDate: date
     };
     try{
-        const responce = await axios.post(`http://localhost:8080/task/create`, taskData)
+        const responce = await axios.post(`http://localhost:5000/task/create`, taskData)
         .then(res=>{
             console.log(responce);
         });
