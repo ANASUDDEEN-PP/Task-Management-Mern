@@ -100,7 +100,7 @@ const ViewTask = () => {
               >
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
-                <option value="Pending">Pending</option>
+                <option value="Closed">Closed</option>
               </select>
 
               <input

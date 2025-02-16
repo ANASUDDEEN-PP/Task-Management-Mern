@@ -21,7 +21,6 @@ const initializeDB = async () => {
         const taskCount = await Task.countDocuments();
 
         if (taskCount === 0) {
-            await Task.create({ name: 'Initialize Database' });
             console.log('TaskManagement database initialized successfully!');
         }
     } catch (err) {

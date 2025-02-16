@@ -22,7 +22,7 @@ exports.createTasks = async (req, res) => {
         if(socketOkey){
             const nofityAdded = await NotificationModel.create({
                 NotificationType: "Task Added",
-                NotificationMessage: notifyMessage,
+                message: notifyMessage,
                 UserId: '',
             });
             console.log(`Task Added Notification Added`);

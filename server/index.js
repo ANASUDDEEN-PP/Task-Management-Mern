@@ -12,9 +12,11 @@ connection();
 
 //import Routes
 const taskRouter = require('./routes/taskRoute');
+const notifyRouter = require('./routes/notificationRoute');
 
 //Use Route
 app.use('/task', taskRouter);
+app.use('/', notifyRouter);
 
 // 404 Route (Catch-All)
 app.use((req, res, next) => {

@@ -6,6 +6,9 @@ import AllTask from './Pages/Tasks/allTask';
 import ViewTask from './Pages/Tasks/ViewTask/viewTask'
 import NotFound from './Pages/notFound/notFound';
 
+//Auth Pages
+import Login from './Pages/Auth/Auth.jsx'
+
 const Main = () => {
   return (
     <Router>
@@ -15,6 +18,8 @@ const Main = () => {
           <Route exact path='/tasks' element={<AllTask />}/>
           <Route exact path="/tasks/:id/viewTask" element={<ViewTask />} />
           <Route exact path='*' element={<NotFound />}/>
+          {/* Authentication Screens */}
+          <Route exact path="/auth" element={<Login />}/>
         </Routes>
       </div>
     </Router>

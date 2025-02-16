@@ -6,7 +6,7 @@ const SearchBarDrop = ({ data, onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter suggestions based on input
-  const filteredData = data.filter(item =>
+  const filteredData = data.filter((item) =>
     item.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -19,16 +19,17 @@ const SearchBarDrop = ({ data, onSearch }) => {
 
   return (
     <div className="searchbar-dropdown">
-      <input
-        type="search"
-        placeholder="Search Task..."
-        className="search-input"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        onFocus={() => setIsOpen(true)}
-        onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-      />
-
+      <div className="inp-div">
+        <input
+          type="search"
+          placeholder="Search Task..."
+          className="search-input"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          onFocus={() => setIsOpen(true)}
+          onBlur={() => setTimeout(() => setIsOpen(false), 200)}
+        />
+      </div>
       {isOpen && searchTerm && (
         <div className="search-dropdown-menu">
           {filteredData.length > 0 ? (

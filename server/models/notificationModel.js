@@ -5,7 +5,7 @@ const notifyModel = new Schema ({
         type: String,
         required: true
     },
-    NotificationMessage: {
+    message: {
         type: String,
         required: true
     },
