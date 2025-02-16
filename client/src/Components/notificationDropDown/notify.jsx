@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
+import io from "socket.io-client";
 import "./notify.css";
+
+const socket = io("http://localhost:5000", {
+    transports: ["websocket", "polling"], // Ensure compatibility
+});
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState([
-    { message: "New task assigned to you", time: new Date().toLocaleTimeString() },
-    { message: "Meeting scheduled at 3 PM", time: new Date().toLocaleTimeString() },
-    { message: "Reminder: Project deadline tomorrow", time: new Date().toLocaleTimeString() },
-  ]);
+  const [notifications, setNotifications] = useState([]);
   const [hasNewNotification, setHasNewNotification] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
 
@@ -16,21 +17,30 @@ const NotificationDropdown = () => {
     return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   };
 
-  // Simulate a new notification after 5 seconds
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const newNotification = { message: "New system update available", time: getCurrentTime() };
-      setNotifications((prev) => [...prev, newNotification]);
-      setHasNewNotification(true);
-      setShowMessage(true);
+    socket.on("connect", () => {
+        console.log("Connected to Socket.io server:", socket.id);
+    });
 
-      // Hide the shaking message after 3 seconds
-      setTimeout(() => {
-        setShowMessage(false);
-      }, 3000);
-    }, 5000);
+    socket.on("taskAdded", (data) => {
+        console.log("New task notification received:", data);
+        const newNotification = { message: data.message, time: getCurrentTime() };
+        setNotifications((prev) => [...prev, newNotification]);
+        setHasNewNotification(true);
+        setShowMessage(true);
 
-    return () => clearTimeout(timer);
+        setTimeout(() => {
+            setShowMessage(false);
+        }, 3000);
+    });
+
+    socket.on("connect_error", (err) => {
+        console.error("Socket connection error:", err);
+    });
+
+    return () => {
+        socket.off("taskAdded");
+    };
   }, []);
 
   const handleBellClick = () => {
@@ -40,7 +50,7 @@ const NotificationDropdown = () => {
 
   return (
     <div className="notification-container">
-      {showMessage && <div className="new-message shake">A new message has come</div>}
+      {showMessage && <div className="new-message shake">A new message has arrived</div>}
 
       <div className="notification-dropdown">
         <button className={`notification-btn ${hasNewNotification ? "shake" : ""}`} onClick={handleBellClick}>

@@ -1,40 +1,44 @@
 import { useState } from "react";
 import "./searchdrop.css";
 
-const SearchBarDrop = () => {
+const SearchBarDrop = ({ data, onSearch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Dummy data for search
-  const suggestions = ["Dashboard", "Tasks", "Settings", "Profile", "Logout", "Users", "Reports", "Analytics", "Notifications"];
-
-  // Filter suggestions based on search input
-  const filteredSuggestions = suggestions.filter(item =>
+  // Filter suggestions based on input
+  const filteredData = data.filter(item =>
     item.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    onSearch(value); // Pass search term to parent component
+    setIsOpen(true);
+  };
 
   return (
     <div className="searchbar-dropdown">
       <input
         type="search"
-        placeholder="Search..."
+        placeholder="Search Task..."
         className="search-input"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={handleSearchChange}
         onFocus={() => setIsOpen(true)}
-        onBlur={() => setTimeout(() => setIsOpen(false), 200)} // Delay closing to allow clicking dropdown items
+        onBlur={() => setTimeout(() => setIsOpen(false), 200)}
       />
 
-      {isOpen && (
+      {isOpen && searchTerm && (
         <div className="search-dropdown-menu">
-          {filteredSuggestions.length > 0 ? (
-            filteredSuggestions.map((item, index) => (
+          {filteredData.length > 0 ? (
+            filteredData.map((item, index) => (
               <div key={index} className="dropdown-item">
                 {item}
               </div>
             ))
           ) : (
-            <div className="dropdown-no-data">No data found</div>
+            <div className="dropdown-no-data">No matching tasks</div>
           )}
         </div>
       )}

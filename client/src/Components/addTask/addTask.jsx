@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import baseUrl from "../../url";
 import "./addtask.css";
 
 const AddTaskPopup = ({ onClose, onSubmit }) => {
@@ -8,11 +7,7 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
   const [assignee, setAssignee] = useState("");
   const [status, setStatus] = useState("In Progress");
   const [date, setDate] = useState("");
-  const [assignees, setAssignees] = useState([
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Jane Smith" },
-    { id: 3, name: "Alice Johnson" }
-  ]);
+  const [assignees, setAssignees] = useState([]);
 
   useEffect(() => {
     // Simulated API call to fetch assignee names
@@ -27,20 +22,22 @@ const AddTaskPopup = ({ onClose, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({ taskName, assignee, status, date });
     const taskData = {
-        TaskName: taskName,
-        AssigneeName: assignee,
-        Status: status,
-        SubmitDate: date
+      TaskName: taskName,
+      AssigneeName: assignee,
+      Status: status,
+      SubmitDate: date
     };
-    try{
-        const responce = await axios.post(`http://localhost:5000/task/create`, taskData)
-        .then(res=>{
-            console.log(responce);
-        });
-    } catch(err){
-        console.log(err)
+
+    try {
+      const response = await axios.post("http://localhost:5003/task/create", taskData);
+      console.log(response.data.data);
+      if (response.data) {
+        onSubmit(response.data.data); // Send the new task back to TaskView
+      }
+      onClose();
+    } catch (err) {
+      console.log(err);
     }
   };
 

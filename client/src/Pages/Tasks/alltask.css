@@ -81,21 +81,21 @@
   
 
   .status-in-progress {
-    background-color: orange;
+    background-color: red;
     color: white;
     font-weight: bold;
     text-align: center;
   }
   
   .status-pending {
-    background-color: green;
+    background-color: orange;
     color: white;
     font-weight: bold;
     text-align: center;
   }
   
   .status-completed {
-    background-color: red;
+    background-color: green;
     color: white;
     font-weight: bold;
     text-align: center;

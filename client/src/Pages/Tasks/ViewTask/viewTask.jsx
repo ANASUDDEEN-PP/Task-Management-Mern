@@ -1,122 +1,137 @@
+// ViewTask.js
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom"; // Assuming you're using React Router
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../../Components/navbar/navBar";
 import Sidebar from "../../../Components/sidebar/sideBar";
 import "./viewtask.css";
 import axios from "axios";
-
+ 
 const ViewTask = () => {
   const { id } = useParams();
-  console.log(id);
-  const [task, setTask] = useState({
-    taskName: "Design Homepage",
-    assignee: "Alice",
-    status: "In Progress",
-    date: "2024-02-15",
-  });
+  const [task, setTask] = useState({});
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTask, setEditedTask] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    const taskDataById = async () => {
-      try{
-        const responce = await axios.get(`http://localhost:5003/get/${id}`);
-      } catch(err){
+  useEffect(() => {
+    const fetchTaskById = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5003/task/get/${id}`
+        );
+        setTask(response.data.Task);
+        setEditedTask(response.data.Task);
+        // console.log(response.data.Task);
+      } catch (err) {
         console.log(err);
       }
-    }
-    taskDataById();
-  },[]);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTask, setEditedTask] = useState(task);
+    };
+    fetchTaskById();
+  }, [id]);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
-    setTask(editedTask);
-    setIsEditing(false);
-  };
-
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
-      console.log("Task deleted!");
-    } else {
-      console.log("Action canceled.");
+  const handleSave = async () => {
+    try {
+      console.log(editedTask);
+      await axios.put(`http://localhost:5003/task/update/${id}`, editedTask);
+      setTask(editedTask);
+      setIsEditing(false);
+      alert("Task Updated");
+    } catch (err) {
+      console.log(err);
     }
   };
-  
 
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditedTask((prevTask) => ({
+      ...prevTask,
+      [name]: value,
+    }));
+  };
 
-  const handleClose = () => {
-    setIsEditing(false);
-  }
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this task?")) {
+      try {
+        await axios.delete(`http://localhost:5003/task/delete/${id}`);
+        console.log("Task deleted!");
+        navigate('/tasks');
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   return (
     <div className="view-task-container">
       <Navbar />
       <div className="view-task-content">
         <Sidebar />
-        <Link className="back-btn" to='/tasks'>Goto Back</Link>
+        <Link className="back-btn" to="/tasks">
+          Go Back
+        </Link>
         <main className="task-main">
           {isEditing ? (
             <>
               <input
                 type="text"
                 className="edit-input title"
-                value={editedTask.taskName}
-                onChange={(e) =>
-                  setEditedTask({ ...editedTask, taskName: e.target.value })
-                }
+                name="TaskName" // Ensure name matches the property in the task object
+                value={editedTask.TaskName || ""}
+                onChange={handleEditChange}
               />
+
               <input
                 type="text"
                 className="edit-input assignee"
-                value={editedTask.assignee}
-                onChange={(e) =>
-                  setEditedTask({ ...editedTask, assignee: e.target.value })
-                }
+                name="AssigneeName"
+                value={editedTask.AssigneeName || ""}
+                onChange={handleEditChange}
               />
-              <div className="row">
-                <select
-                  className="edit-select"
-                  value={editedTask.status}
-                  onChange={(e) =>
-                    setEditedTask({ ...editedTask, status: e.target.value })
-                  }
-                >
-                  <option value="In Progress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Pending">Pending</option>
-                </select>
-                <input
-                  type="date"
-                  className="edit-input"
-                  value={editedTask.date}
-                  onChange={(e) =>
-                    setEditedTask({ ...editedTask, date: e.target.value })
-                  }
-                />
-              </div>
+
+              <select
+                className="edit-select"
+                name="Status"
+                value={editedTask.Status || ""}
+                onChange={handleEditChange}
+              >
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+              </select>
+
+              <input
+                type="date"
+                className="edit-input"
+                name="Date"
+                value={editedTask.Date || ""}
+                onChange={handleEditChange}
+              />
               <div className="button-group">
                 <button className="save-btn" onClick={handleSave}>
                   Save
                 </button>
-                <button className="delete-btn" onClick={handleClose}>
-                  Close
+                <button
+                  className="cancel-btn"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
                 </button>
               </div>
             </>
           ) : (
             <>
-              <h1 className="task-title">{task.taskName}</h1>
-              <h3 className="task-assignee">{task.assignee}</h3>
+              <h1 className="task-title">{task.TaskName}</h1>
+              <h3 className="task-assignee">{task.AssigneeName}</h3>
               <div className="task-details">
                 <p>
-                  <strong>Status:</strong> <span className={task.status.toLowerCase()}>{task.status}</span>
+                  <strong>Status:</strong> {task.Status}
                 </p>
                 <p>
-                  <strong>Submitted Date:</strong> {task.date}
+                  <strong>Submitted Date:</strong> {task.Date}
                 </p>
               </div>
               <div className="button-group">
