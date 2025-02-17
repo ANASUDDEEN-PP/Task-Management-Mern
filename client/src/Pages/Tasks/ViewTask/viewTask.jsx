@@ -37,13 +37,13 @@ const ViewTask = () => {
     try {
       console.log(editedTask);
       await axios.put(`http://localhost:5003/task/update/${id}`, editedTask);
-      setTask(editedTask);
       setIsEditing(false);
       alert("Task Updated");
     } catch (err) {
       console.log(err);
     }
   };
+  
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;

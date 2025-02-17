@@ -6,9 +6,9 @@ const SearchBarDrop = ({ data, onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Filter suggestions based on input
-  const filteredData = data.filter((item) =>
-    item.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData = data
+  ?.filter((item) => typeof item === "string" && item.toLowerCase().includes(searchTerm.toLowerCase()))
+  || [];
 
   const handleSearchChange = (e) => {
     const value = e.target.value;

@@ -13,7 +13,6 @@ const Sidebar = () => {
         <ul>
           <li><a href="/">Dashboard</a></li>
           <li><a href="/tasks">Tasks</a></li>
-          {/* <li><a href="#">Logout</a></li> */}
         </ul>
       </nav>
     </div>
